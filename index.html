@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#080808">
+<title>NOT A SUNDAY — El test del domingo</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800;900&family=DM+Sans:wght@400;500;600;700&display=swap');
+:root{--bg:#080808;--fg:#f4f1eb;--muted:#aaa69f;--line:#393939;--acid:#d8ff3e}
+*{box-sizing:border-box}html{background:var(--bg);scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--fg);font-family:'DM Sans',Arial,sans-serif;min-height:100vh}
+button{font:inherit;cursor:pointer}.shell{max-width:1120px;margin:auto;padding:28px 5vw 36px;min-height:100vh;display:flex;flex-direction:column}
+.top{display:flex;justify-content:space-between;align-items:center;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}
+.brand{font-family:'Barlow Condensed',Impact,sans-serif;font-size:20px;line-height:.8;letter-spacing:-.02em;color:var(--fg)}
+.edition{border:1px solid var(--line);padding:8px 11px}
+main{flex:1;display:flex;align-items:center;padding:9vh 0 7vh}.page{width:100%;display:none;animation:in .45s ease}.page.active{display:block}
+@keyframes in{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.kicker{font-size:11px;letter-spacing:.25em;text-transform:uppercase;color:var(--acid);margin-bottom:22px}
+h1,h2{font-family:'Barlow Condensed',Impact,sans-serif;text-transform:uppercase;font-weight:800;letter-spacing:-.035em;margin:0;line-height:.86}
+h1{font-size:clamp(76px,14vw,180px);max-width:900px}h2{font-size:clamp(54px,8vw,104px);max-width:900px}
+.lead{font-size:clamp(16px,2vw,21px);line-height:1.55;color:#c9c5be;max-width:590px;margin:30px 0}
+.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:36px}
+.btn{background:var(--acid);color:#090909;border:1px solid var(--acid);padding:16px 22px;font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;transition:.2s}
+.btn:hover{background:transparent;color:var(--acid)}.btn.ghost{background:transparent;color:var(--fg);border-color:#777}.btn.ghost:hover{border-color:var(--acid);color:var(--acid)}
+.foot{border-top:1px solid var(--line);padding-top:16px;display:flex;justify-content:space-between;gap:16px;color:#777;font-size:10px;letter-spacing:.16em;text-transform:uppercase}
+.progress{height:2px;background:#292929;margin:0 0 36px;max-width:460px}.progress span{height:100%;display:block;background:var(--acid);width:0;transition:width .3s}
+.question{font-size:clamp(48px,8vw,92px);max-width:850px}
+.choices{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;max-width:760px;margin-top:34px}
+.choice{background:transparent;border:1px solid #555;color:var(--fg);padding:20px;text-align:left;min-height:76px;font-size:15px;line-height:1.35;transition:.2s}
+.choice:hover{border-color:var(--acid);color:var(--acid);transform:translateY(-2px)}
+.small{font-size:12px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase}
+.result-tag{display:inline-block;border:1px solid var(--acid);color:var(--acid);padding:8px 12px;font-size:10px;letter-spacing:.2em;text-transform:uppercase;margin-bottom:25px}
+.result-copy{max-width:620px;font-size:19px;line-height:1.6;color:#c9c5be;margin:25px 0}
+.manifesto{font-family:'Barlow Condensed',Impact,sans-serif;text-transform:uppercase;font-size:clamp(32px,5vw,64px);line-height:.98;max-width:800px;margin:28px 0}
+hr{border:0;border-top:1px solid var(--line);margin:32px 0}
+a{color:var(--acid);text-decoration:none}
+@media(max-width:600px){.shell{padding:22px 22px 25px}main{padding:8vh 0}.choices{grid-template-columns:1fr}.choice{min-height:64px}.foot{font-size:9px}.top{font-size:9px}h1{font-size:clamp(76px,22vw,120px)}}
+</style>
+</head>
+<body>
+<div class="shell">
+<header class="top"><div class="brand">NOT A<br>SUNDAY</div><div class="edition">EDITION 001 · THE COFFEE SHOP</div></header>
+<main>
+<section class="page active" id="intro">
+<div class="kicker">A different kind of Sunday</div>
+<h1>WHAT'S<br>YOUR<br>SUNDAY?</h1>
+<p class="lead">Un pequeño test para descubrir qué tipo de domingo va contigo.<br>No hay respuestas correctas. Bueno, quizá una.</p>
+<div class="actions"><button class="btn" onclick="start()">EMPEZAR EL TEST ↗</button></div>
+</section>
+<section class="page" id="quiz">
+<div class="progress"><span id="bar"></span></div><div class="small" id="count">PREGUNTA 01 / 06</div>
+<div class="kicker" style="margin-top:28px">Sé sincero. Nadie te juzga.</div>
+<h2 class="question" id="qtext"></h2>
+<div class="choices" id="choices"></div>
+<div class="actions"><button class="btn ghost" onclick="back()">← VOLVER</button></div>
+</section>
+<section class="page" id="result">
+<div class="kicker">Tu diagnóstico dominical</div><div class="result-tag" id="type"></div>
+<h2 id="headline"></h2>
+<p class="result-copy" id="copy"></p>
+<div class="manifesto">Same concept.<br>Different places.<br>Never the same Sunday.</div>
+<hr>
+<div class="kicker">Tu siguiente plan</div>
+<h2 style="font-size:clamp(48px,8vw,92px)">YOU NEED<br>NOT A SUNDAY.</h2>
+<p class="lead">Una serie de encuentros culturales durante el día, en espacios singulares, con música, DJs y personas con ganas de hacer algo distinto. Aforo reducido. Cada edición, un lugar diferente.</p>
+<div class="actions"><button class="btn" onclick="join()">QUIERO VENIR ↗</button><button class="btn ghost" onclick="restart()">REPETIR EL TEST</button></div>
+<p class="small" id="joinmsg" style="margin-top:18px"></p>
+</section>
+<section class="page" id="end">
+<div class="kicker">NOT A SUNDAY · EDICIÓN 001</div><h2>GOOD SUNDAYS<br>ARE MADE<br>TO BE SHARED.</h2>
+<p class="lead">La primera edición convierte una cafetería en un pequeño punto de encuentro cultural y musical. La música acompaña la experiencia; la comunidad es la protagonista.</p>
+<div class="manifesto">A different kind of Sunday.</div>
+<div class="actions"><button class="btn" onclick="restart()">EMPEZAR DE NUEVO ↗</button></div>
+</section>
+</main>
+<footer class="foot"><span>KHAKI PROJECTS</span><span>UNA SERIE DE ENCUENTROS CULTURALES DIURNOS</span><span>001 — 2026</span></footer>
+</div>
+<script>
+const questions=[
+{q:"ES DOMINGO. ¿A QUÉ HORA EMPIEZAS A FUNCIONAR?",a:[["Antes que nadie. Primero, un café.",2],["Cuando el día lo decida.",1],["No me hables antes de las doce.",0],["Ya estoy fuera. Evidentemente.",3]]},
+{q:"TU PLAN IDEAL EMPIEZA CON…",a:[["Un café realmente bueno.",2],["Un mensaje que diga «¿dónde vamos?»",3],["Sin planes. Sin gente. Sin ruido.",0],["Un sitio en el que nunca he estado.",3]]},
+{q:"¿CUÁL ES LA BANDA SONORA DE TU DOMINGO?",a:[["Una lista de música hecha con mimo.",2],["Un DJ, pero sin que parezca una discoteca.",3],["Silencio. Por favor.",0],["Lo que esté sonando a mi alrededor.",1]]},
+{q:"ELIGE TU TIPO DE LUGAR.",a:[["Una cafetería con algo especial.",3],["Mi sofá. Mi reino.",0],["Un lugar inesperado.",3],["El sitio de siempre. Ya me conocen.",1]]},
+{q:"UN BUEN DOMINGO DEBERÍA SENTIRSE COMO…",a:[["Una pequeña aventura.",3],["Una pausa para recargar.",1],["Una historia que contar el lunes.",3],["Un día que casi ni ha pasado.",0]]},
+{q:"ÚLTIMA PREGUNTA. ¿TE APETECE ALGO DIFERENTE?",a:[["Siempre. Sorpréndeme.",3],["Depende de quién pregunte.",2],["Convénceme.",1],["He llegado hasta aquí, ¿no?",3]]}
+];
+let answers=[],idx=0;
+function show(id){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById(id).classList.add('active');window.scrollTo(0,0)}
+function start(){answers=[];idx=0;render();show('quiz')}
+function render(){let q=questions[idx];document.getElementById('qtext').textContent=q.q;document.getElementById('count').textContent=`PREGUNTA ${String(idx+1).padStart(2,'0')} / 06`;document.getElementById('bar').style.width=((idx)/questions.length*100)+'%';let c=document.getElementById('choices');c.innerHTML='';q.a.forEach((a,i)=>{let b=document.createElement('button');b.className='choice';b.textContent=a[0];b.onclick=()=>pick(a[1]);c.appendChild(b)})}
+function pick(v){answers[idx]=v;idx++;if(idx<questions.length)render();else finish()}
+function back(){if(idx>0){idx--;render()}else show('intro')}
+function finish(){let score=answers.reduce((a,b)=>a+b,0);let type,head,copy;if(score<=7){type='EL DOMINGO TRANQUILO';head='TE GUSTA ESTAR EN TU ZONA DE CONFORT.';copy='Y no pasa nada. Pero quizá te vendría bien cambiar un poco de escenario. Un café distinto, música de fondo y gente nueva. No prometemos cambiarte el domingo. Solo hacerlo menos previsible.'}else if(score<=13){type='EL DOMINGO CURIOSO';head='SABES QUE HAY MUCHO MÁS AHÍ FUERA.';copy='Te gusta improvisar, pero con criterio. Un plan que no parezca un plan. Un sitio con personalidad, música bien elegida y tiempo para dejar que pasen cosas. Estás cerca.'}else{type='EL DOMINGO NOT A SUNDAY';head='ESTÁ CLARO QUE NO IBAS A QUEDARTE EN CASA.';copy='Buscas lugares, personas y momentos que rompan la rutina. No necesitas una excusa para salir, solo una buena razón para hacer algo diferente. Tenemos algo para ti.'}document.getElementById('type').textContent=type;document.getElementById('headline').textContent=head;document.getElementById('copy').textContent=copy;document.getElementById('bar').style.width='100%';show('result')}
+function join(){show('end')}
+function restart(){show('intro')}
+</script>
+</body></html>
